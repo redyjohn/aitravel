@@ -85,21 +85,8 @@
         details.day-group[open] > summary {
             border-bottom: 1px solid #EAEAEA;
         }
-        .member-chip.selected {
-            background-color: #3B7AAE;
-            color: white;
-            border-color: #3B7AAE;
-        }
-        .member-chip.payer-selected {
-            background-color: #FFB7B2;
-            border-color: #f08a82;
-            color: #7f1d1d;
-        }
         .nav-scroll::-webkit-scrollbar {
             display: none;
-        }
-        #edit-expense-modal:not(.hidden) {
-            display: flex;
         }
     </style>
 </head>
@@ -438,110 +425,10 @@
                     <p>請自備環保餐具與水壺、適量點餐避免浪費、隨手關燈節能、落實垃圾分類回收，尊重當地文化與生態，讓旅行成為永續共好的助力。</p>
                 </div>
             </section>
-
-            <section id="expenses" class="space-y-4">
-                <div class="flex items-center space-x-2 mb-2">
-                    <span class="font-nunito font-extrabold text-xl text-fujiBlue bg-fujiBlue/10 px-3 py-1 rounded-2xl"><i class="fa-solid fa-wallet"></i></span>
-                    <div>
-                        <h2 class="font-bold text-lg text-gray-800">記帳分帳</h2>
-                        <p class="text-xs text-gray-400">旅伴共用 • 即時同步</p>
-                    </div>
-                </div>
-
-                <div id="expense-loading" class="text-center text-xs text-gray-400 py-6">
-                    <i class="fa-solid fa-spinner fa-spin mr-1"></i> 載入中...
-                </div>
-
-                <div id="expense-app" class="space-y-4 hidden">
-                    <div class="bg-fujiBlue/5 border border-fujiBlue/20 rounded-2xl p-3.5 text-xs text-gray-700 flex items-center justify-between card-shadow">
-                        <div>
-                            <p class="font-bold text-fujiBlue mb-0.5"><i class="fa-solid fa-money-bill-transfer mr-1"></i>即時匯率</p>
-                            <p>1 TWD = <span id="rate-display" class="font-nunito font-bold">--</span> KRW</p>
-                            <p id="rate-updated" class="text-gray-400 mt-0.5"></p>
-                        </div>
-                        <button id="btn-refresh-rate" type="button" class="bg-fujiBlue text-white px-3 py-2 rounded-xl text-xs font-medium active:scale-95 transition">
-                            <i class="fa-solid fa-rotate"></i> 更新
-                        </button>
-                    </div>
-
-                    <div class="bg-warmGray/50 border border-softGray p-4 rounded-[1.8rem] card-shadow space-y-3">
-                        <div class="flex items-center justify-between">
-                            <h3 class="font-bold text-sm text-gray-800"><i class="fa-solid fa-users text-fujiBlue mr-1"></i>旅遊人員</h3>
-                            <span id="member-count" class="text-xs text-gray-400"></span>
-                        </div>
-                        <div id="member-list" class="flex flex-wrap gap-2"></div>
-                        <div class="flex gap-2">
-                            <input id="member-name-input" type="text" maxlength="12" placeholder="輸入姓名" class="flex-1 text-xs border border-softGray rounded-xl px-3 py-2.5 bg-white focus:outline-none focus:border-fujiBlue">
-                            <button id="btn-add-member" type="button" class="bg-fujiBlue text-white px-4 py-2.5 rounded-xl text-xs font-medium whitespace-nowrap active:scale-95 transition">
-                                <i class="fa-solid fa-plus"></i> 新增
-                            </button>
-                        </div>
-                    </div>
-
-                    <div id="settlement-card" class="bg-gradient-to-br from-fujiBlue to-blue-600 text-white p-4 rounded-[1.8rem] card-shadow space-y-3 hidden">
-                        <h3 class="font-bold text-sm"><i class="fa-solid fa-scale-balanced mr-1"></i>分帳結算</h3>
-                        <div id="balance-list" class="space-y-1.5 text-xs"></div>
-                        <div class="border-t border-white/20 pt-2">
-                            <p class="text-xs opacity-80 mb-1.5">建議轉帳</p>
-                            <div id="transfer-list" class="space-y-1 text-xs font-medium"></div>
-                        </div>
-                    </div>
-
-                    <details class="note-group bg-warmGray/50 border border-softGray rounded-[1.8rem] card-shadow overflow-hidden" open>
-                        <summary class="flex items-center justify-between p-4 font-bold text-sm text-gray-800 bg-white/60">
-                            <span class="flex items-center gap-2"><i class="fa-solid fa-plus-circle text-fujiBlue"></i>新增費用</span>
-                            <i class="fa-solid fa-chevron-down text-gray-400 text-xs note-chevron transition-transform"></i>
-                        </summary>
-                        <form id="expense-form" class="px-4 pb-4 pt-2 space-y-3 border-t border-softGray text-xs">
-                            <div>
-                                <label class="block text-gray-500 mb-1">項目名稱</label>
-                                <input id="expense-title" type="text" required placeholder="例：明洞晚餐、樂天門票" class="w-full border border-softGray rounded-xl px-3 py-2.5 bg-white focus:outline-none focus:border-fujiBlue">
-                            </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <label class="block text-gray-500 mb-1">金額</label>
-                                    <input id="expense-amount" type="number" required min="1" step="1" placeholder="0" class="w-full border border-softGray rounded-xl px-3 py-2.5 bg-white focus:outline-none focus:border-fujiBlue font-nunito">
-                                </div>
-                                <div>
-                                    <label class="block text-gray-500 mb-1">幣別</label>
-                                    <select id="expense-currency" class="w-full border border-softGray rounded-xl px-3 py-2.5 bg-white focus:outline-none focus:border-fujiBlue">
-                                        <option value="TWD">台幣 TWD</option>
-                                        <option value="KRW">韓元 KRW</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <p id="expense-twd-preview" class="text-fujiBlue font-medium hidden"></p>
-                            <div>
-                                <label class="block text-gray-500 mb-1.5">付款人（點選）</label>
-                                <div id="payer-select" class="flex flex-wrap gap-2"></div>
-                            </div>
-                            <div>
-                                <div class="flex items-center justify-between mb-1.5">
-                                    <label class="text-gray-500">分攤對象（點選切換）</label>
-                                    <button type="button" id="btn-select-all-split" class="text-fujiBlue font-medium">全選</button>
-                                </div>
-                                <div id="split-select" class="flex flex-wrap gap-2"></div>
-                            </div>
-                            <button type="submit" class="w-full bg-fujiBlue text-white py-3 rounded-xl font-bold active:scale-[0.98] transition">
-                                <i class="fa-solid fa-check mr-1"></i>記錄這筆費用
-                            </button>
-                        </form>
-                    </details>
-
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between px-1">
-                            <h3 class="font-bold text-sm text-gray-800"><i class="fa-solid fa-receipt text-fujiBlue mr-1"></i>費用紀錄</h3>
-                            <span id="expense-total" class="text-xs font-nunito font-bold text-fujiBlue"></span>
-                        </div>
-                        <div id="expense-list" class="space-y-2"></div>
-                        <p id="expense-empty" class="text-center text-xs text-gray-400 py-6 hidden">尚無費用紀錄，新增第一筆吧！</p>
-                    </div>
-                </div>
-            </section>
             
         </main>
 
-        <div class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-sm bg-white/90 backdrop-blur-md border border-softGray h-16 rounded-2xl shadow-xl flex items-center justify-around px-0.5 z-50 nav-scroll overflow-x-auto">
+        <nav class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-sm bg-white/90 backdrop-blur-md border border-softGray h-16 rounded-2xl shadow-xl flex items-center justify-around px-0.5 z-50 nav-scroll overflow-x-auto">
             <a href="#day1" onclick="setActive(this)" class="flex flex-col items-center justify-center text-gray-400 text-xs font-medium flex-1 min-w-[3rem] active-tab">
                 <i class="fa-solid fa-plane mb-0.5 text-sm"></i>
                 <span class="scale-75">D1</span>
@@ -562,60 +449,17 @@
                 <i class="fa-solid fa-circle-exclamation mb-0.5 text-sm"></i>
                 <span class="scale-75">須知</span>
             </a>
-            <a href="#expenses" onclick="setActive(this)" class="flex flex-col items-center justify-center text-gray-400 text-xs font-medium flex-1 min-w-[3rem]">
+            <a href="expenses.html" class="flex flex-col items-center justify-center text-gray-400 text-xs font-medium flex-1 min-w-[3rem]">
                 <i class="fa-solid fa-wallet mb-0.5 text-sm"></i>
                 <span class="scale-75">記帳</span>
             </a>
-        </div>
-
-        <div id="edit-expense-modal" class="hidden fixed inset-0 z-[60] items-end justify-center bg-black/40 p-4 pb-safe">
-            <div class="w-full max-w-md bg-white rounded-[1.8rem] card-shadow max-h-[85vh] overflow-y-auto">
-                <div class="sticky top-0 bg-white border-b border-softGray px-5 py-4 rounded-t-[1.8rem] flex items-center justify-between">
-                    <h3 class="font-bold text-gray-800"><i class="fa-solid fa-pen-to-square text-fujiBlue mr-1"></i>修改費用</h3>
-                    <button type="button" id="btn-close-edit" class="text-gray-400 hover:text-gray-600 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
-                </div>
-                <form id="edit-expense-form" class="p-5 space-y-3 text-xs">
-                    <p id="edit-expense-title" class="font-bold text-sm text-gray-800"></p>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-gray-500 mb-1">金額</label>
-                            <input id="edit-expense-amount" type="number" required min="1" step="1" class="w-full border border-softGray rounded-xl px-3 py-2.5 bg-white focus:outline-none focus:border-fujiBlue font-nunito">
-                        </div>
-                        <div>
-                            <label class="block text-gray-500 mb-1">幣別</label>
-                            <select id="edit-expense-currency" class="w-full border border-softGray rounded-xl px-3 py-2.5 bg-white focus:outline-none focus:border-fujiBlue">
-                                <option value="TWD">台幣 TWD</option>
-                                <option value="KRW">韓元 KRW</option>
-                            </select>
-                        </div>
-                    </div>
-                    <p id="edit-twd-preview" class="text-fujiBlue font-medium hidden"></p>
-                    <div>
-                        <label class="block text-gray-500 mb-1.5">付款人（點選）</label>
-                        <div id="edit-payer-select" class="flex flex-wrap gap-2"></div>
-                    </div>
-                    <div>
-                        <div class="flex items-center justify-between mb-1.5">
-                            <label class="text-gray-500">分攤對象（點選切換）</label>
-                            <button type="button" id="btn-edit-select-all" class="text-fujiBlue font-medium">全選</button>
-                        </div>
-                        <div id="edit-split-select" class="flex flex-wrap gap-2"></div>
-                    </div>
-                    <div class="flex gap-2 pt-1">
-                        <button type="button" id="btn-cancel-edit" class="flex-1 border border-softGray text-gray-600 py-3 rounded-xl font-medium active:scale-[0.98] transition">取消</button>
-                        <button type="submit" class="flex-1 bg-fujiBlue text-white py-3 rounded-xl font-bold active:scale-[0.98] transition">
-                            <i class="fa-solid fa-check mr-1"></i>儲存修改
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+        </nav>
 
     </div>
 
     <script>
         function setActive(element) {
-            const tabs = document.querySelectorAll('.fixed a');
+            const tabs = document.querySelectorAll('nav a');
             tabs.forEach(tab => tab.classList.remove('active-tab'));
             element.classList.add('active-tab');
             const href = element.getAttribute('href');
@@ -625,6 +469,19 @@
             }
         }
 
+        function openDayFromHash() {
+            const hash = window.location.hash;
+            if (hash?.startsWith('#day')) {
+                const details = document.querySelector(`${hash} details`);
+                if (details) details.open = true;
+                const anchor = document.querySelector(`nav a[href="${hash}"]`);
+                if (anchor) setActive(anchor);
+            }
+        }
+
+        openDayFromHash();
+        window.addEventListener('hashchange', openDayFromHash);
+
         window.addEventListener('scroll', () => {
             const sections = document.querySelectorAll('section');
             const scrollPos = window.scrollY + 200;
@@ -632,9 +489,9 @@
             sections.forEach(section => {
                 if (scrollPos >= section.offsetTop && scrollPos < section.offsetTop + section.offsetHeight) {
                     const id = section.getAttribute('id');
-                    const activeAnchor = document.querySelector(`a[href="#${id}"]`);
+                    const activeAnchor = document.querySelector(`nav a[href="#${id}"]`);
                     if (activeAnchor) {
-                        const tabs = document.querySelectorAll('.fixed a');
+                        const tabs = document.querySelectorAll('nav a');
                         tabs.forEach(tab => tab.classList.remove('active-tab'));
                         activeAnchor.classList.add('active-tab');
                     }
@@ -642,448 +499,5 @@
             });
         });
     </script>
-    <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import {
-    getFirestore, collection, doc, addDoc, deleteDoc, updateDoc,
-    onSnapshot, query, orderBy, serverTimestamp, setDoc
-  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyD7_wuk8iUGf6vrTbPWqi796YUBlWxC8GQ",
-    authDomain: "aitravel-ec43b.firebaseapp.com",
-    projectId: "aitravel-ec43b",
-    storageBucket: "aitravel-ec43b.appspot.com",
-    messagingSenderId: "356936081383",
-    appId: "1:356936081383:web:83bda3e3f63a6756852742"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const TRIP_ID = "seoul-4day";
-  const FALLBACK_KRW_PER_TWD = 35;
-
-  let members = [];
-  let expenses = [];
-  let krwPerTwd = FALLBACK_KRW_PER_TWD;
-  let rateUpdatedAt = "";
-  let selectedPayer = null;
-  let selectedSplit = new Set();
-  let editingExpenseId = null;
-  let editPayer = null;
-  let editSplit = new Set();
-
-  const $ = (id) => document.getElementById(id);
-
-  function updatePreview(amountEl, currencyEl, previewEl) {
-    const amount = parseFloat(amountEl.value);
-    const currency = currencyEl.value;
-    if (!amount || amount <= 0) {
-      previewEl.classList.add("hidden");
-      return;
-    }
-    if (currency === "KRW") {
-      const twd = toTwd(amount, currency, krwPerTwd);
-      previewEl.textContent = `≈ ${formatTwd(twd)}（依匯率 1 TWD = ${krwPerTwd.toFixed(2)} KRW）`;
-      previewEl.classList.remove("hidden");
-    } else {
-      previewEl.classList.add("hidden");
-    }
-  }
-
-  function formatTwd(n) {
-    return "NT$ " + Math.round(n).toLocaleString();
-  }
-
-  function formatKrw(n) {
-    return "₩ " + Math.round(n).toLocaleString();
-  }
-
-  function memberName(id) {
-    const m = members.find((x) => x.id === id);
-    return m ? m.name : "已移除";
-  }
-
-  function toTwd(amount, currency, rate) {
-    if (currency === "TWD") return amount;
-    return amount / rate;
-  }
-
-  async function fetchExchangeRate() {
-    try {
-      const res = await fetch("https://api.frankfurter.app/latest?from=TWD&to=KRW");
-      if (!res.ok) throw new Error("rate fetch failed");
-      const data = await res.json();
-      krwPerTwd = data.rates.KRW;
-      rateUpdatedAt = data.date;
-    } catch {
-      krwPerTwd = FALLBACK_KRW_PER_TWD;
-      rateUpdatedAt = "使用預設參考匯率";
-    }
-    $("rate-display").textContent = krwPerTwd.toFixed(2);
-    $("rate-updated").textContent = rateUpdatedAt ? `更新：${rateUpdatedAt}` : "";
-    updateTwdPreview();
-    if (!$("edit-expense-modal").classList.contains("hidden")) updateEditTwdPreview();
-  }
-
-  function updateTwdPreview() {
-    updatePreview($("expense-amount"), $("expense-currency"), $("expense-twd-preview"));
-  }
-
-  function updateEditTwdPreview() {
-    updatePreview($("edit-expense-amount"), $("edit-expense-currency"), $("edit-twd-preview"));
-  }
-
-  function calculateBalances() {
-    const balances = {};
-    members.forEach((m) => { balances[m.id] = 0; });
-    expenses.forEach((exp) => {
-      if (!exp.splitAmong?.length) return;
-      const share = exp.amountTwd / exp.splitAmong.length;
-      if (balances[exp.paidBy] !== undefined) balances[exp.paidBy] += exp.amountTwd;
-      exp.splitAmong.forEach((id) => {
-        if (balances[id] !== undefined) balances[id] -= share;
-      });
-    });
-    return balances;
-  }
-
-  function simplifyDebts(balances) {
-    const debtors = [];
-    const creditors = [];
-    Object.entries(balances).forEach(([id, bal]) => {
-      if (bal < -0.5) debtors.push({ id, amount: -bal });
-      if (bal > 0.5) creditors.push({ id, amount: bal });
-    });
-    debtors.sort((a, b) => b.amount - a.amount);
-    creditors.sort((a, b) => b.amount - a.amount);
-    const transfers = [];
-    let i = 0, j = 0;
-    while (i < debtors.length && j < creditors.length) {
-      const pay = Math.min(debtors[i].amount, creditors[j].amount);
-      if (pay >= 1) {
-        transfers.push({
-          from: debtors[i].id,
-          to: creditors[j].id,
-          amount: pay
-        });
-      }
-      debtors[i].amount -= pay;
-      creditors[j].amount -= pay;
-      if (debtors[i].amount < 0.5) i++;
-      if (creditors[j].amount < 0.5) j++;
-    }
-    return transfers;
-  }
-
-  function renderMemberChips(container, mode, state) {
-    container.innerHTML = "";
-    if (!members.length) {
-      container.innerHTML = '<span class="text-gray-400 text-xs">請先新增旅遊人員</span>';
-      return;
-    }
-    members.forEach((m) => {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "member-chip border border-softGray bg-white text-gray-700 px-3 py-1.5 rounded-full text-xs font-medium transition";
-      btn.textContent = m.name;
-      btn.dataset.id = m.id;
-      if (mode === "payer" && state.payer === m.id) btn.classList.add("payer-selected");
-      if (mode === "split" && state.split.has(m.id)) btn.classList.add("selected");
-      btn.addEventListener("click", () => {
-        if (mode === "payer") {
-          state.payer = m.id;
-          renderMemberChips(container, mode, state);
-        } else {
-          if (state.split.has(m.id)) state.split.delete(m.id);
-          else state.split.add(m.id);
-          renderMemberChips(container, mode, state);
-        }
-      });
-      container.appendChild(btn);
-    });
-  }
-
-  const addFormState = () => ({ get payer() { return selectedPayer; }, set payer(v) { selectedPayer = v; }, split: selectedSplit });
-  const editFormState = () => ({ get payer() { return editPayer; }, set payer(v) { editPayer = v; }, split: editSplit });
-
-  function renderMembers() {
-    const list = $("member-list");
-    list.innerHTML = "";
-    members.forEach((m) => {
-      const chip = document.createElement("span");
-      chip.className = "inline-flex items-center gap-1.5 bg-white border border-softGray px-3 py-1.5 rounded-full text-xs font-medium text-gray-700";
-      chip.innerHTML = `<i class="fa-solid fa-user text-fujiBlue text-[10px]"></i>${m.name}
-        <button type="button" data-id="${m.id}" class="remove-member text-gray-300 hover:text-red-500 ml-0.5"><i class="fa-solid fa-xmark"></i></button>`;
-      list.appendChild(chip);
-    });
-    $("member-count").textContent = members.length ? `共 ${members.length} 人` : "";
-    list.querySelectorAll(".remove-member").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        const id = btn.dataset.id;
-        const used = expenses.some((e) => e.paidBy === id || e.splitAmong?.includes(id));
-        const msg = used ? "此人已有相關費用紀錄，確定移除？" : "確定移除此人員？";
-        if (!confirm(msg)) return;
-        await deleteDoc(doc(db, "trips", TRIP_ID, "members", id));
-        if (selectedPayer === id) selectedPayer = null;
-        selectedSplit.delete(id);
-      });
-    });
-    renderMemberChips($("payer-select"), "payer", addFormState());
-    renderMemberChips($("split-select"), "split", addFormState());
-    if (editingExpenseId) {
-      renderMemberChips($("edit-payer-select"), "payer", editFormState());
-      renderMemberChips($("edit-split-select"), "split", editFormState());
-    }
-  }
-
-  function openEditModal(exp) {
-    editingExpenseId = exp.id;
-    editPayer = exp.paidBy;
-    editSplit = new Set(exp.splitAmong || []);
-    $("edit-expense-title").textContent = exp.title;
-    $("edit-expense-amount").value = exp.amount;
-    $("edit-expense-currency").value = exp.currency || "TWD";
-    updateEditTwdPreview();
-    renderMemberChips($("edit-payer-select"), "payer", editFormState());
-    renderMemberChips($("edit-split-select"), "split", editFormState());
-    $("edit-expense-modal").classList.remove("hidden");
-    document.body.style.overflow = "hidden";
-  }
-
-  function closeEditModal() {
-    editingExpenseId = null;
-    editPayer = null;
-    editSplit = new Set();
-    $("edit-expense-modal").classList.add("hidden");
-    document.body.style.overflow = "";
-  }
-
-  function renderSettlement() {
-    const card = $("settlement-card");
-    if (!members.length || !expenses.length) {
-      card.classList.add("hidden");
-      return;
-    }
-    card.classList.remove("hidden");
-    const balances = calculateBalances();
-    const balanceList = $("balance-list");
-    balanceList.innerHTML = members.map((m) => {
-      const bal = balances[m.id] || 0;
-      const label = bal > 0.5 ? `應收 ${formatTwd(bal)}` : bal < -0.5 ? `應付 ${formatTwd(-bal)}` : "已結清";
-      const color = bal > 0.5 ? "text-green-200" : bal < -0.5 ? "text-red-200" : "opacity-70";
-      return `<div class="flex justify-between ${color}"><span>${m.name}</span><span class="font-nunito font-bold">${label}</span></div>`;
-    }).join("");
-    const transfers = simplifyDebts(balances);
-    const transferList = $("transfer-list");
-    if (!transfers.length) {
-      transferList.innerHTML = '<p class="opacity-70">大家已結清，無需轉帳 🎉</p>';
-    } else {
-      transferList.innerHTML = transfers.map((t) =>
-        `<p><i class="fa-solid fa-arrow-right mr-1 opacity-70"></i>${memberName(t.from)} → ${memberName(t.to)} <span class="font-nunito">${formatTwd(t.amount)}</span></p>`
-      ).join("");
-    }
-  }
-
-  function renderExpenses() {
-    const list = $("expense-list");
-    const empty = $("expense-empty");
-    const total = expenses.reduce((s, e) => s + e.amountTwd, 0);
-    $("expense-total").textContent = expenses.length ? `總計 ${formatTwd(total)}` : "";
-    if (!expenses.length) {
-      list.innerHTML = "";
-      empty.classList.remove("hidden");
-      renderSettlement();
-      return;
-    }
-    empty.classList.add("hidden");
-    list.innerHTML = expenses.map((exp) => {
-      const splitNames = (exp.splitAmong || []).map(memberName).join("、");
-      const orig = exp.currency === "KRW"
-        ? `${formatKrw(exp.amount)} → ${formatTwd(exp.amountTwd)}`
-        : formatTwd(exp.amount);
-      const date = exp.createdAt?.toDate
-        ? exp.createdAt.toDate().toLocaleDateString("zh-TW", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })
-        : "";
-      return `<div class="bg-warmGray/50 border border-softGray p-3.5 rounded-2xl card-shadow">
-        <div class="flex justify-between items-start gap-2">
-          <div class="flex-1 min-w-0">
-            <p class="font-bold text-sm text-gray-800 truncate">${exp.title}</p>
-            <p class="text-fujiBlue font-nunito font-bold text-sm mt-0.5">${orig}</p>
-            <p class="text-gray-400 mt-1"><i class="fa-solid fa-credit-card mr-1"></i>${memberName(exp.paidBy)} 付款</p>
-            <p class="text-gray-400"><i class="fa-solid fa-users mr-1"></i>分攤：${splitNames}</p>
-            ${date ? `<p class="text-gray-300 mt-0.5">${date}</p>` : ""}
-          </div>
-          <div class="flex flex-col gap-1 shrink-0">
-            <button type="button" data-id="${exp.id}" class="edit-expense text-gray-300 hover:text-fujiBlue p-1"><i class="fa-solid fa-pen"></i></button>
-            <button type="button" data-id="${exp.id}" class="delete-expense text-gray-300 hover:text-red-500 p-1"><i class="fa-solid fa-trash-can"></i></button>
-          </div>
-        </div>
-      </div>`;
-    }).join("");
-    list.querySelectorAll(".edit-expense").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const exp = expenses.find((e) => e.id === btn.dataset.id);
-        if (exp) openEditModal(exp);
-      });
-    });
-    list.querySelectorAll(".delete-expense").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        if (!confirm("確定刪除此筆費用？")) return;
-        await deleteDoc(doc(db, "trips", TRIP_ID, "expenses", btn.dataset.id));
-      });
-    });
-    renderSettlement();
-  }
-
-  function renderAll() {
-    renderMembers();
-    renderExpenses();
-  }
-
-  async function addMember(name) {
-    const trimmed = name.trim();
-    if (!trimmed) return;
-    if (members.some((m) => m.name === trimmed)) {
-      alert("已有相同姓名的人員");
-      return;
-    }
-    await addDoc(collection(db, "trips", TRIP_ID, "members"), {
-      name: trimmed,
-      createdAt: serverTimestamp()
-    });
-  }
-
-  $("btn-add-member").addEventListener("click", async () => {
-    const input = $("member-name-input");
-    await addMember(input.value);
-    input.value = "";
-    input.focus();
-  });
-
-  $("member-name-input").addEventListener("keydown", async (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      await addMember(e.target.value);
-      e.target.value = "";
-    }
-  });
-
-  $("btn-refresh-rate").addEventListener("click", fetchExchangeRate);
-  $("expense-amount").addEventListener("input", updateTwdPreview);
-  $("expense-currency").addEventListener("change", updateTwdPreview);
-  $("edit-expense-amount").addEventListener("input", updateEditTwdPreview);
-  $("edit-expense-currency").addEventListener("change", updateEditTwdPreview);
-
-  $("btn-select-all-split").addEventListener("click", () => {
-    if (selectedSplit.size === members.length) selectedSplit.clear();
-    else members.forEach((m) => selectedSplit.add(m.id));
-    renderMemberChips($("split-select"), "split", addFormState());
-  });
-
-  $("btn-edit-select-all").addEventListener("click", () => {
-    if (editSplit.size === members.length) editSplit.clear();
-    else members.forEach((m) => editSplit.add(m.id));
-    renderMemberChips($("edit-split-select"), "split", editFormState());
-  });
-
-  $("btn-close-edit").addEventListener("click", closeEditModal);
-  $("btn-cancel-edit").addEventListener("click", closeEditModal);
-  $("edit-expense-modal").addEventListener("click", (e) => {
-    if (e.target === $("edit-expense-modal")) closeEditModal();
-  });
-
-  $("edit-expense-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if (!editingExpenseId) return;
-    if (!editPayer) {
-      alert("請選擇付款人");
-      return;
-    }
-    if (!editSplit.size) {
-      alert("請至少選擇一位分攤對象");
-      return;
-    }
-    const amount = parseFloat($("edit-expense-amount").value);
-    const currency = $("edit-expense-currency").value;
-    if (!amount || amount <= 0) return;
-
-    const amountTwd = toTwd(amount, currency, krwPerTwd);
-    await updateDoc(doc(db, "trips", TRIP_ID, "expenses", editingExpenseId), {
-      amount,
-      currency,
-      amountTwd,
-      rateUsed: krwPerTwd,
-      paidBy: editPayer,
-      splitAmong: [...editSplit],
-      updatedAt: serverTimestamp()
-    });
-    closeEditModal();
-  });
-
-  $("expense-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if (!members.length) {
-      alert("請先新增旅遊人員");
-      return;
-    }
-    if (!selectedPayer) {
-      alert("請選擇付款人");
-      return;
-    }
-    if (!selectedSplit.size) {
-      alert("請至少選擇一位分攤對象");
-      return;
-    }
-    const amount = parseFloat($("expense-amount").value);
-    const currency = $("expense-currency").value;
-    const title = $("expense-title").value.trim();
-    if (!title || !amount || amount <= 0) return;
-
-    const amountTwd = toTwd(amount, currency, krwPerTwd);
-    await addDoc(collection(db, "trips", TRIP_ID, "expenses"), {
-      title,
-      amount,
-      currency,
-      amountTwd,
-      rateUsed: krwPerTwd,
-      paidBy: selectedPayer,
-      splitAmong: [...selectedSplit],
-      createdAt: serverTimestamp()
-    });
-
-    $("expense-title").value = "";
-    $("expense-amount").value = "";
-    $("expense-currency").value = "TWD";
-    $("expense-twd-preview").classList.add("hidden");
-    selectedPayer = null;
-    selectedSplit = new Set(members.map((m) => m.id));
-    renderMemberChips($("payer-select"), "payer", addFormState());
-    renderMemberChips($("split-select"), "split", addFormState());
-  });
-
-  onSnapshot(query(collection(db, "trips", TRIP_ID, "members"), orderBy("createdAt")), (snap) => {
-    members = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-    if (!selectedPayer && members.length) selectedPayer = members[0].id;
-    if (!selectedSplit.size) members.forEach((m) => selectedSplit.add(m.id));
-    renderAll();
-  }, (err) => {
-    console.error("members error:", err);
-    $("expense-loading").innerHTML = '<p class="text-red-500">無法載入人員資料，請確認 Firebase 連線</p>';
-  });
-
-  onSnapshot(query(collection(db, "trips", TRIP_ID, "expenses"), orderBy("createdAt", "desc")), (snap) => {
-    expenses = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-    renderExpenses();
-    $("expense-loading").classList.add("hidden");
-    $("expense-app").classList.remove("hidden");
-  }, (err) => {
-    console.error("expenses error:", err);
-    $("expense-loading").innerHTML = '<p class="text-red-500">無法載入費用資料，請確認 Firebase 連線</p>';
-  });
-
-  await setDoc(doc(db, "trips", TRIP_ID), { name: "首爾樂天童話4日", updatedAt: serverTimestamp() }, { merge: true });
-  await fetchExchangeRate();
-</script>
 </body>
 </html>
