@@ -85,6 +85,9 @@
         .nav-scroll::-webkit-scrollbar {
             display: none;
         }
+        #edit-expense-modal:not(.hidden) {
+            display: flex;
+        }
     </style>
 </head>
 <body class="font-sans text-gray-800 antialiased flex justify-center min-h-screen">
@@ -532,6 +535,49 @@
             </a>
         </div>
 
+        <div id="edit-expense-modal" class="hidden fixed inset-0 z-[60] items-end justify-center bg-black/40 p-4 pb-safe">
+            <div class="w-full max-w-md bg-white rounded-[1.8rem] card-shadow max-h-[85vh] overflow-y-auto">
+                <div class="sticky top-0 bg-white border-b border-softGray px-5 py-4 rounded-t-[1.8rem] flex items-center justify-between">
+                    <h3 class="font-bold text-gray-800"><i class="fa-solid fa-pen-to-square text-fujiBlue mr-1"></i>修改費用</h3>
+                    <button type="button" id="btn-close-edit" class="text-gray-400 hover:text-gray-600 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+                <form id="edit-expense-form" class="p-5 space-y-3 text-xs">
+                    <p id="edit-expense-title" class="font-bold text-sm text-gray-800"></p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-gray-500 mb-1">金額</label>
+                            <input id="edit-expense-amount" type="number" required min="1" step="1" class="w-full border border-softGray rounded-xl px-3 py-2.5 bg-white focus:outline-none focus:border-fujiBlue font-nunito">
+                        </div>
+                        <div>
+                            <label class="block text-gray-500 mb-1">幣別</label>
+                            <select id="edit-expense-currency" class="w-full border border-softGray rounded-xl px-3 py-2.5 bg-white focus:outline-none focus:border-fujiBlue">
+                                <option value="TWD">台幣 TWD</option>
+                                <option value="KRW">韓元 KRW</option>
+                            </select>
+                        </div>
+                    </div>
+                    <p id="edit-twd-preview" class="text-fujiBlue font-medium hidden"></p>
+                    <div>
+                        <label class="block text-gray-500 mb-1.5">付款人（點選）</label>
+                        <div id="edit-payer-select" class="flex flex-wrap gap-2"></div>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label class="text-gray-500">分攤對象（點選切換）</label>
+                            <button type="button" id="btn-edit-select-all" class="text-fujiBlue font-medium">全選</button>
+                        </div>
+                        <div id="edit-split-select" class="flex flex-wrap gap-2"></div>
+                    </div>
+                    <div class="flex gap-2 pt-1">
+                        <button type="button" id="btn-cancel-edit" class="flex-1 border border-softGray text-gray-600 py-3 rounded-xl font-medium active:scale-[0.98] transition">取消</button>
+                        <button type="submit" class="flex-1 bg-fujiBlue text-white py-3 rounded-xl font-bold active:scale-[0.98] transition">
+                            <i class="fa-solid fa-check mr-1"></i>儲存修改
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -561,7 +607,7 @@
     <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import {
-    getFirestore, collection, doc, addDoc, deleteDoc,
+    getFirestore, collection, doc, addDoc, deleteDoc, updateDoc,
     onSnapshot, query, orderBy, serverTimestamp, setDoc
   } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
@@ -585,8 +631,27 @@
   let rateUpdatedAt = "";
   let selectedPayer = null;
   let selectedSplit = new Set();
+  let editingExpenseId = null;
+  let editPayer = null;
+  let editSplit = new Set();
 
   const $ = (id) => document.getElementById(id);
+
+  function updatePreview(amountEl, currencyEl, previewEl) {
+    const amount = parseFloat(amountEl.value);
+    const currency = currencyEl.value;
+    if (!amount || amount <= 0) {
+      previewEl.classList.add("hidden");
+      return;
+    }
+    if (currency === "KRW") {
+      const twd = toTwd(amount, currency, krwPerTwd);
+      previewEl.textContent = `≈ ${formatTwd(twd)}（依匯率 1 TWD = ${krwPerTwd.toFixed(2)} KRW）`;
+      previewEl.classList.remove("hidden");
+    } else {
+      previewEl.classList.add("hidden");
+    }
+  }
 
   function formatTwd(n) {
     return "NT$ " + Math.round(n).toLocaleString();
@@ -620,23 +685,15 @@
     $("rate-display").textContent = krwPerTwd.toFixed(2);
     $("rate-updated").textContent = rateUpdatedAt ? `更新：${rateUpdatedAt}` : "";
     updateTwdPreview();
+    if (!$("edit-expense-modal").classList.contains("hidden")) updateEditTwdPreview();
   }
 
   function updateTwdPreview() {
-    const amount = parseFloat($("expense-amount").value);
-    const currency = $("expense-currency").value;
-    const preview = $("expense-twd-preview");
-    if (!amount || amount <= 0) {
-      preview.classList.add("hidden");
-      return;
-    }
-    const twd = toTwd(amount, currency, krwPerTwd);
-    if (currency === "KRW") {
-      preview.textContent = `≈ ${formatTwd(twd)}（依匯率 1 TWD = ${krwPerTwd.toFixed(2)} KRW）`;
-      preview.classList.remove("hidden");
-    } else {
-      preview.classList.add("hidden");
-    }
+    updatePreview($("expense-amount"), $("expense-currency"), $("expense-twd-preview"));
+  }
+
+  function updateEditTwdPreview() {
+    updatePreview($("edit-expense-amount"), $("edit-expense-currency"), $("edit-twd-preview"));
   }
 
   function calculateBalances() {
@@ -681,7 +738,7 @@
     return transfers;
   }
 
-  function renderMemberChips(container, mode) {
+  function renderMemberChips(container, mode, state) {
     container.innerHTML = "";
     if (!members.length) {
       container.innerHTML = '<span class="text-gray-400 text-xs">請先新增旅遊人員</span>';
@@ -693,21 +750,24 @@
       btn.className = "member-chip border border-softGray bg-white text-gray-700 px-3 py-1.5 rounded-full text-xs font-medium transition";
       btn.textContent = m.name;
       btn.dataset.id = m.id;
-      if (mode === "payer" && selectedPayer === m.id) btn.classList.add("payer-selected");
-      if (mode === "split" && selectedSplit.has(m.id)) btn.classList.add("selected");
+      if (mode === "payer" && state.payer === m.id) btn.classList.add("payer-selected");
+      if (mode === "split" && state.split.has(m.id)) btn.classList.add("selected");
       btn.addEventListener("click", () => {
         if (mode === "payer") {
-          selectedPayer = m.id;
-          renderMemberChips($("payer-select"), "payer");
+          state.payer = m.id;
+          renderMemberChips(container, mode, state);
         } else {
-          if (selectedSplit.has(m.id)) selectedSplit.delete(m.id);
-          else selectedSplit.add(m.id);
-          renderMemberChips($("split-select"), "split");
+          if (state.split.has(m.id)) state.split.delete(m.id);
+          else state.split.add(m.id);
+          renderMemberChips(container, mode, state);
         }
       });
       container.appendChild(btn);
     });
   }
+
+  const addFormState = () => ({ get payer() { return selectedPayer; }, set payer(v) { selectedPayer = v; }, split: selectedSplit });
+  const editFormState = () => ({ get payer() { return editPayer; }, set payer(v) { editPayer = v; }, split: editSplit });
 
   function renderMembers() {
     const list = $("member-list");
@@ -731,8 +791,34 @@
         selectedSplit.delete(id);
       });
     });
-    renderMemberChips($("payer-select"), "payer");
-    renderMemberChips($("split-select"), "split");
+    renderMemberChips($("payer-select"), "payer", addFormState());
+    renderMemberChips($("split-select"), "split", addFormState());
+    if (editingExpenseId) {
+      renderMemberChips($("edit-payer-select"), "payer", editFormState());
+      renderMemberChips($("edit-split-select"), "split", editFormState());
+    }
+  }
+
+  function openEditModal(exp) {
+    editingExpenseId = exp.id;
+    editPayer = exp.paidBy;
+    editSplit = new Set(exp.splitAmong || []);
+    $("edit-expense-title").textContent = exp.title;
+    $("edit-expense-amount").value = exp.amount;
+    $("edit-expense-currency").value = exp.currency || "TWD";
+    updateEditTwdPreview();
+    renderMemberChips($("edit-payer-select"), "payer", editFormState());
+    renderMemberChips($("edit-split-select"), "split", editFormState());
+    $("edit-expense-modal").classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeEditModal() {
+    editingExpenseId = null;
+    editPayer = null;
+    editSplit = new Set();
+    $("edit-expense-modal").classList.add("hidden");
+    document.body.style.overflow = "";
   }
 
   function renderSettlement() {
@@ -790,10 +876,19 @@
             <p class="text-gray-400"><i class="fa-solid fa-users mr-1"></i>分攤：${splitNames}</p>
             ${date ? `<p class="text-gray-300 mt-0.5">${date}</p>` : ""}
           </div>
-          <button type="button" data-id="${exp.id}" class="delete-expense text-gray-300 hover:text-red-500 p-1 shrink-0"><i class="fa-solid fa-trash-can"></i></button>
+          <div class="flex flex-col gap-1 shrink-0">
+            <button type="button" data-id="${exp.id}" class="edit-expense text-gray-300 hover:text-fujiBlue p-1"><i class="fa-solid fa-pen"></i></button>
+            <button type="button" data-id="${exp.id}" class="delete-expense text-gray-300 hover:text-red-500 p-1"><i class="fa-solid fa-trash-can"></i></button>
+          </div>
         </div>
       </div>`;
     }).join("");
+    list.querySelectorAll(".edit-expense").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const exp = expenses.find((e) => e.id === btn.dataset.id);
+        if (exp) openEditModal(exp);
+      });
+    });
     list.querySelectorAll(".delete-expense").forEach((btn) => {
       btn.addEventListener("click", async () => {
         if (!confirm("確定刪除此筆費用？")) return;
@@ -839,14 +934,53 @@
   $("btn-refresh-rate").addEventListener("click", fetchExchangeRate);
   $("expense-amount").addEventListener("input", updateTwdPreview);
   $("expense-currency").addEventListener("change", updateTwdPreview);
+  $("edit-expense-amount").addEventListener("input", updateEditTwdPreview);
+  $("edit-expense-currency").addEventListener("change", updateEditTwdPreview);
 
   $("btn-select-all-split").addEventListener("click", () => {
-    if (selectedSplit.size === members.length) {
-      selectedSplit.clear();
-    } else {
-      members.forEach((m) => selectedSplit.add(m.id));
+    if (selectedSplit.size === members.length) selectedSplit.clear();
+    else members.forEach((m) => selectedSplit.add(m.id));
+    renderMemberChips($("split-select"), "split", addFormState());
+  });
+
+  $("btn-edit-select-all").addEventListener("click", () => {
+    if (editSplit.size === members.length) editSplit.clear();
+    else members.forEach((m) => editSplit.add(m.id));
+    renderMemberChips($("edit-split-select"), "split", editFormState());
+  });
+
+  $("btn-close-edit").addEventListener("click", closeEditModal);
+  $("btn-cancel-edit").addEventListener("click", closeEditModal);
+  $("edit-expense-modal").addEventListener("click", (e) => {
+    if (e.target === $("edit-expense-modal")) closeEditModal();
+  });
+
+  $("edit-expense-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!editingExpenseId) return;
+    if (!editPayer) {
+      alert("請選擇付款人");
+      return;
     }
-    renderMemberChips($("split-select"), "split");
+    if (!editSplit.size) {
+      alert("請至少選擇一位分攤對象");
+      return;
+    }
+    const amount = parseFloat($("edit-expense-amount").value);
+    const currency = $("edit-expense-currency").value;
+    if (!amount || amount <= 0) return;
+
+    const amountTwd = toTwd(amount, currency, krwPerTwd);
+    await updateDoc(doc(db, "trips", TRIP_ID, "expenses", editingExpenseId), {
+      amount,
+      currency,
+      amountTwd,
+      rateUsed: krwPerTwd,
+      paidBy: editPayer,
+      splitAmong: [...editSplit],
+      updatedAt: serverTimestamp()
+    });
+    closeEditModal();
   });
 
   $("expense-form").addEventListener("submit", async (e) => {
@@ -886,7 +1020,8 @@
     $("expense-twd-preview").classList.add("hidden");
     selectedPayer = null;
     selectedSplit = new Set(members.map((m) => m.id));
-    renderAll();
+    renderMemberChips($("payer-select"), "payer", addFormState());
+    renderMemberChips($("split-select"), "split", addFormState());
   });
 
   onSnapshot(query(collection(db, "trips", TRIP_ID, "members"), orderBy("createdAt")), (snap) => {
