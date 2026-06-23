@@ -38,7 +38,8 @@
             background-position: 0 0, 12px 12px;
         }
         .pb-safe {
-            padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+            /* bottom-4(1rem) + nav h-16(4rem) + 額外間距 */
+            padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px));
         }
         .active-tab {
             color: #3B7AAE !important;
@@ -55,6 +56,7 @@
         }
         html {
             scroll-behavior: smooth;
+            scroll-padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px));
         }
         details.note-group > summary {
             list-style: none;
