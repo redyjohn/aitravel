@@ -72,6 +72,19 @@
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
         }
+        details.day-group > summary {
+            list-style: none;
+            cursor: pointer;
+        }
+        details.day-group > summary::-webkit-details-marker {
+            display: none;
+        }
+        details.day-group[open] > summary .day-chevron {
+            transform: rotate(180deg);
+        }
+        details.day-group[open] > summary {
+            border-bottom: 1px solid #EAEAEA;
+        }
         .member-chip.selected {
             background-color: #3B7AAE;
             color: white;
@@ -118,18 +131,21 @@
             </div>
         </div>
 
-        <main class="flex-1 p-5 pb-safe space-y-8">
+        <main class="flex-1 p-5 pb-safe space-y-4">
             
-            <section id="day1" class="space-y-4">
-                <div class="flex items-center space-x-2 mb-2">
-                    <span class="font-nunito font-extrabold text-2xl text-fujiBlue bg-fujiBlue/10 px-3 py-1 rounded-2xl">D1</span>
-                    <div>
-                        <h2 class="font-bold text-lg text-gray-800">松山啟航：飛越金浦與美味炸雞</h2>
-                        <p class="text-xs text-gray-400">台北松山機場 (14:40) → 首爾金浦機場 (18:10)</p>
-                    </div>
-                </div>
+            <section id="day1">
+                <details class="day-group bg-warmGray/50 border border-softGray rounded-[1.8rem] card-shadow overflow-hidden">
+                    <summary class="flex items-center space-x-2 p-4 bg-white/60">
+                        <span class="font-nunito font-extrabold text-2xl text-fujiBlue bg-fujiBlue/10 px-3 py-1 rounded-2xl shrink-0">D1</span>
+                        <div class="flex-1 min-w-0 text-left">
+                            <h2 class="font-bold text-lg text-gray-800">松山啟航：飛越金浦與美味炸雞</h2>
+                            <p class="text-xs text-gray-400">台北松山機場 (14:40) → 首爾金浦機場 (18:10)</p>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-gray-400 text-xs day-chevron transition-transform shrink-0"></i>
+                    </summary>
+                    <div class="p-4 space-y-4">
 
-                <div class="bg-warmGray/50 border border-softGray p-4 rounded-[1.8rem] card-shadow space-y-3">
+                <div class="bg-white/70 border border-softGray p-4 rounded-[1.8rem] card-shadow space-y-3">
                     <div class="flex justify-between items-start">
                         <span class="bg-blue-500 text-white text-xs px-2.5 py-1 rounded-full font-medium"><i class="fa-solid fa-plane mr-1"></i>交通</span>
                         <span class="text-xs font-nunito text-gray-400 font-semibold">14:40</span>
@@ -145,7 +161,7 @@
                     </div>
                 </div>
 
-                <div class="bg-warmGray/50 border border-softGray p-4 rounded-[1.8rem] card-shadow space-y-3">
+                <div class="bg-white/70 border border-softGray p-4 rounded-[1.8rem] card-shadow space-y-3">
                     <div class="flex justify-between items-start">
                         <span class="bg-orange-400 text-white text-xs px-2.5 py-1 rounded-full font-medium"><i class="fa-solid fa-utensils mr-1"></i>食物</span>
                         <span class="text-xs font-nunito text-gray-400 font-semibold">19:30</span>
@@ -165,18 +181,23 @@
                     <p><strong>👗 建議穿著：</strong> 機艙內冷氣與夜晚首爾晚風體感較涼，建議採取舒適長袖襯衫搭配輕便休閒長褲，並隨身攜帶一件薄長袖連帽防風外套。</p>
                     <p><strong>☀️ 天氣提示：</strong> 6月底至7月初開始進入首爾夏季，日照長且相對乾燥。第一天下午多雲到晴，降雨機率低，晚間氣候體感涼爽舒適。</p>
                 </div>
+                    </div>
+                </details>
             </section>
 
-            <section id="day2" class="space-y-4">
-                <div class="flex items-center space-x-2 mb-2">
-                    <span class="font-nunito font-extrabold text-2xl text-fujiBlue bg-fujiBlue/10 px-3 py-1 rounded-2xl">D2</span>
-                    <div>
-                        <h2 class="font-bold text-lg text-gray-800">繽紛童話：松月洞童話村與樂天世界</h2>
-                        <p class="text-xs text-gray-400">網美打卡 → 夢幻室內外冒險樂園</p>
-                    </div>
-                </div>
+            <section id="day2">
+                <details class="day-group bg-warmGray/50 border border-softGray rounded-[1.8rem] card-shadow overflow-hidden">
+                    <summary class="flex items-center space-x-2 p-4 bg-white/60">
+                        <span class="font-nunito font-extrabold text-2xl text-fujiBlue bg-fujiBlue/10 px-3 py-1 rounded-2xl shrink-0">D2</span>
+                        <div class="flex-1 min-w-0 text-left">
+                            <h2 class="font-bold text-lg text-gray-800">繽紛童話：松月洞童話村與樂天世界</h2>
+                            <p class="text-xs text-gray-400">網美打卡 → 夢幻室內外冒險樂園</p>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-gray-400 text-xs day-chevron transition-transform shrink-0"></i>
+                    </summary>
+                    <div class="p-4 space-y-4">
 
-                <div class="bg-warmGray/50 border border-softGray p-4 rounded-[1.8rem] card-shadow space-y-3">
+                <div class="bg-white/70 border border-softGray p-4 rounded-[1.8rem] card-shadow space-y-3">
                     <div class="flex justify-between items-start">
                         <span class="bg-teal-500 text-white text-xs px-2.5 py-1 rounded-full font-medium"><i class="fa-solid fa-camera mr-1"></i>景點</span>
                         <span class="text-xs font-nunito text-gray-400 font-semibold">10:00</span>
@@ -192,7 +213,7 @@
                     </div>
                 </div>
 
-                <div class="bg-warmGray/50 border border-softGray p-4 rounded-[1.8rem] card-shadow space-y-3">
+                <div class="bg-white/70 border border-softGray p-4 rounded-[1.8rem] card-shadow space-y-3">
                     <div class="flex justify-between items-start">
                         <span class="bg-purple-500 text-white text-xs px-2.5 py-1 rounded-full font-medium"><i class="fa-solid fa-fort-awesome mr-1"></i>活動</span>
                         <span class="text-xs font-nunito text-gray-400 font-semibold">14:00</span>
@@ -212,18 +233,23 @@
                     <p><strong>👗 建議穿著：</strong> 穿著色彩鮮明、俏皮的短袖上衣、百褶裙或牛仔吊帶褲，在色彩豐富的童話村拍照效果極佳！請務必穿著氣墊運動鞋以便在樂園長時間行走。</p>
                     <p><strong>☀️ 天氣提示：</strong> 白天紫外線極強，氣溫預估達 28°C 且十分乾燥，請準備遮陽帽與太陽眼鏡。樂天世界室內探險世界園區冷氣極強，建議攜帶薄外套防感冒。</p>
                 </div>
+                    </div>
+                </details>
             </section>
 
-            <section id="day3" class="space-y-4">
-                <div class="flex items-center space-x-2 mb-2">
-                    <span class="font-nunito font-extrabold text-2xl text-fujiBlue bg-fujiBlue/10 px-3 py-1 rounded-2xl">D3</span>
-                    <div>
-                        <h2 class="font-bold text-lg text-gray-800">首爾地標：南山三景與明洞繁華購物</h2>
-                        <p class="text-xs text-gray-400">浪漫登高遠眺 → 瘋狂血拼選品</p>
-                    </div>
-                </div>
+            <section id="day3">
+                <details class="day-group bg-warmGray/50 border border-softGray rounded-[1.8rem] card-shadow overflow-hidden">
+                    <summary class="flex items-center space-x-2 p-4 bg-white/60">
+                        <span class="font-nunito font-extrabold text-2xl text-fujiBlue bg-fujiBlue/10 px-3 py-1 rounded-2xl shrink-0">D3</span>
+                        <div class="flex-1 min-w-0 text-left">
+                            <h2 class="font-bold text-lg text-gray-800">首爾地標：南山三景與明洞繁華購物</h2>
+                            <p class="text-xs text-gray-400">浪漫登高遠眺 → 瘋狂血拼選品</p>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-gray-400 text-xs day-chevron transition-transform shrink-0"></i>
+                    </summary>
+                    <div class="p-4 space-y-4">
 
-                <div class="bg-warmGray/50 border border-softGray p-4 rounded-[1.8rem] card-shadow space-y-3">
+                <div class="bg-white/70 border border-softGray p-4 rounded-[1.8rem] card-shadow space-y-3">
                     <div class="flex justify-between items-start">
                         <span class="bg-teal-500 text-white text-xs px-2.5 py-1 rounded-full font-medium"><i class="fa-solid fa-monument mr-1"></i>景點</span>
                         <span class="text-xs font-nunito text-gray-400 font-semibold">14:00</span>
@@ -239,7 +265,7 @@
                     </div>
                 </div>
 
-                <div class="bg-warmGray/50 border border-softGray p-4 rounded-[1.8rem] card-shadow space-y-3">
+                <div class="bg-white/70 border border-softGray p-4 rounded-[1.8rem] card-shadow space-y-3">
                     <div class="flex justify-between items-start">
                         <span class="bg-pink-500 text-white text-xs px-2.5 py-1 rounded-full font-medium"><i class="fa-solid fa-bag-shopping mr-1"></i>購物</span>
                         <span class="text-xs font-nunito text-gray-400 font-semibold">17:30</span>
@@ -259,18 +285,23 @@
                     <p><strong>👗 建議穿著：</strong> 明洞血拼與南山健走需要超高體力，建議穿著寬鬆吸汗的短袖 T-Shirt 搭配高彈性休閒褲。下午前往山頂觀景台風大、體感較涼，務必隨身攜帶外套。</p>
                     <p><strong>☀️ 天氣提示：</strong> 全天多雲到晴，首爾山區傍晚風力較強。明洞夜間體感溫度約 20°C，紫外線高，白天出門別忘了補擦保濕護唇膏與防曬。</p>
                 </div>
+                    </div>
+                </details>
             </section>
 
-            <section id="day4" class="space-y-4">
-                <div class="flex items-center space-x-2 mb-2">
-                    <span class="font-nunito font-extrabold text-2xl text-fujiBlue bg-fujiBlue/10 px-3 py-1 rounded-2xl">D4</span>
-                    <div>
-                        <h2 class="font-bold text-lg text-gray-800">依依不捨：最後採購與珍重再見</h2>
-                        <p class="text-xs text-gray-400">首爾金浦機場 (13:50) → 台北松山機場 (15:25)</p>
-                    </div>
-                </div>
+            <section id="day4">
+                <details class="day-group bg-warmGray/50 border border-softGray rounded-[1.8rem] card-shadow overflow-hidden">
+                    <summary class="flex items-center space-x-2 p-4 bg-white/60">
+                        <span class="font-nunito font-extrabold text-2xl text-fujiBlue bg-fujiBlue/10 px-3 py-1 rounded-2xl shrink-0">D4</span>
+                        <div class="flex-1 min-w-0 text-left">
+                            <h2 class="font-bold text-lg text-gray-800">依依不捨：最後採購與珍重再見</h2>
+                            <p class="text-xs text-gray-400">首爾金浦機場 (13:50) → 台北松山機場 (15:25)</p>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-gray-400 text-xs day-chevron transition-transform shrink-0"></i>
+                    </summary>
+                    <div class="p-4 space-y-4">
 
-                <div class="bg-warmGray/50 border border-softGray p-4 rounded-[1.8rem] card-shadow space-y-3">
+                <div class="bg-white/70 border border-softGray p-4 rounded-[1.8rem] card-shadow space-y-3">
                     <div class="flex justify-between items-start">
                         <span class="bg-blue-500 text-white text-xs px-2.5 py-1 rounded-full font-medium"><i class="fa-solid fa-plane-arrival mr-1"></i>交通</span>
                         <span class="text-xs font-nunito text-gray-400 font-semibold">13:50</span>
@@ -290,6 +321,8 @@
                     <p><strong>👗 建議穿著：</strong> 搭機建議以最放鬆、不緊繃的「洋蔥式穿法」為主：寬鬆衛衣內搭棉質短 T，下半身穿束口運動長褲，方便在飛機上休息並輕鬆應對兩地室內外溫差。</p>
                     <p><strong>☀️ 天氣提示：</strong> 今天首爾金浦地區早上為晴天，中午後可能轉為多雲。台北松山機場下午體感較悶熱且偶有午後局部雷陣雨，下機前記得將雨具隨手放進隨身攜帶包中。</p>
                 </div>
+                    </div>
+                </details>
             </section>
 
             <section id="notes" class="space-y-4">
@@ -585,6 +618,11 @@
             const tabs = document.querySelectorAll('.fixed a');
             tabs.forEach(tab => tab.classList.remove('active-tab'));
             element.classList.add('active-tab');
+            const href = element.getAttribute('href');
+            if (href?.startsWith('#day')) {
+                const details = document.querySelector(`${href} details`);
+                if (details) details.open = true;
+            }
         }
 
         window.addEventListener('scroll', () => {
